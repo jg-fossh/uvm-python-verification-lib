@@ -33,7 +33,7 @@
 # File name     : wb_master_agent.py
 # Author        : Jose R Garcia
 # Created       : 2020/11/09 21:43:54
-# Last modified : 2020/12/01 00:11:28
+# Last modified : 2020/12/01 00:24:54
 # Project Name  : UVM-Python Verification Library
 # Module Name   : wb_master_agent
 # Description   : Wishbone Bus Master Verification Component Agent.
@@ -42,11 +42,10 @@
 #   The agent's components instantiations and connections.
 ##################################################################################################
 from uvm import *
-from wb_master_agent_if import *
-from wb_master_agent import *
-from wb_master_agent_sequencer import *
-from wb_master_agent_monitor import *
-from mem_model import *
+from wb_master_if import *
+from wb_master_driver import *
+from wb_master_sequencer import *
+from wb_master_monitor import *
 
 class wb_master_agent(UVMAgent):
     """         
@@ -59,7 +58,7 @@ class wb_master_agent(UVMAgent):
         """         
            Function: new
           
-           Definition: Read slave agent constructor.
+           Definition: Agent constructor.
 
            Args:
              name: This agents name.
@@ -70,7 +69,6 @@ class wb_master_agent(UVMAgent):
         self.wb_master_sqr = None  # wb_master_agent_sequencer
         self.wb_master_drv = None  # wb_master_agent (driver)
         self.wb_master_mon = None  # wb_master_agent_monitor
-        self.wb_master_vif = None  # memory_intfc_vif No library import, it is in __init__.py
         self.wb_master_ap  = UVMAnalysisPort("ap", self) # analysis port for the monitor
 
 
@@ -86,17 +84,17 @@ class wb_master_agent(UVMAgent):
         """
         arr = []
         if (not UVMConfigDb.get(self, "*", "wb_master_cfg", arr)):
-            uvm_fatal("MEM_INFC_READ_SLAVE/AGENT/CONFIG", "No wb_master_agent_config")
+            uvm_fatal("wb_master_agent", "No wb_master_config")
         self.wb_master_cfg = arr[0]
         
         
         if (self.wb_master_cfg.has_driver)
-            self.wb_master_drv = wb_master_agent.type_id.create("wb_master_drv", self)
+            self.wb_master_drv = wb_master_driver.type_id.create("wb_master_drv", self)
             # self.sqr = wb_master_agent_sequencer.type_id.create("sqr", self)
             self.wb_master_sqr = UVMSequencer.type_id.create("wb_master_sqr", self)
        
         if (self.wb_master_cfg.has_monitor)
-            self.wb_master_mon = wb_master_agent_monitor.type_id.create("wb_master_mon", self)
+            self.wb_master_mon = wb_master_monitor.type_id.create("wb_master_mon", self)
 
 
     def connect_phase(self, phase):

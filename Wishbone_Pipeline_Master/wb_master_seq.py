@@ -33,7 +33,7 @@
 # File name     : wb_master_seq.py
 # Author        : Jose R Garcia
 # Created       : 2020/11/22 10:24:13
-# Last modified : 2020/12/01 00:17:12
+# Last modified : 2020/12/01 21:52:54
 # Project Name  : UVM Python Verification Library
 # Module Name   : wb_master_seq, wb_master_base_sequence
 # Description   : Wishbone Bus Sequence Item and Sequences.
@@ -60,11 +60,11 @@ class wb_master_seq(UVMSequenceItem):
         
 
     def do_copy(self, rhs):
-        self.addr           = rhs.addr
-        self.data           = rhs.data
-        self.type           = rhs.type
-        self.byte_enable    = rhs.byte_enable
-        self.transmit_delay = rhs.transmit_delay
+        self.data_in           = rhs.data_in
+        self.stall             = rhs.stall
+        self.response_data_tag = rhs.response_data_tag
+        self.acknowledge       = rhs.acknowledge
+        self.transmit_delay    = rhs.transmit_delay
 
 
     def do_clone(self):
@@ -100,13 +100,25 @@ class read_single_sequence(wb_master_base_sequence):
     """
     def __init__(self, name="read_single_sequence"):
         wb_master_base_sequence.__init__(self, name)
+        self.data              = 0
+        self.stall             = 0
+        self.data              = 0
+        self.transmit_delay    = 0
+        self.response_data_tag = 0
 
 
     async def body(self):
         # Build the sequence item
+        self.req.data_in           = self.data
+        self.req.stall             = self.stall
+        self.req.response_data_tag = self.response_data_tag
+        self.req.acknowledge       = self.acknowledge
+        self.req.transmit_delay    = self.transmit_delay
+
+        await uvm_do_with(self, self.req) # start_item 
 
 
-uvm_object_utils(read_sequence)
+uvm_object_utils(read_single_sequence)
 
 
 class write_single_sequence(wb_master_base_sequence):
@@ -117,11 +129,22 @@ class write_single_sequence(wb_master_base_sequence):
     """
     def __init__(self, name="write_single_sequence"):
         wb_master_base_sequence.__init__(self, name)
+        self.stall             = 0
+        self.data              = 0
+        self.transmit_delay    = 0
+        self.response_data_tag = 0
 
 
     async def body(self):
         # Build the sequence item
+        self.req.data_in           = 0
+        self.req.stall             = self.stall
+        self.req.response_data_tag = self.response_data_tag
+        self.req.acknowledge       = self.acknowledge
+        self.req.transmit_delay    = self.transmit_delay
+
+        await uvm_do_with(self, self.req) # start_item 
 
 
 
-uvm_object_utils(write_sequence)
+uvm_object_utils(write_single_sequence)

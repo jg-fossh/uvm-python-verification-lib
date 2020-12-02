@@ -33,7 +33,7 @@
 # File name     : wb_master_driver.py
 # Author        : Jose R Garcia
 # Created       : 2020/11/22 12:45:43
-# Last modified : 2020/11/30 23:58:50
+# Last modified : 2020/12/01 21:51:55
 # Project Name  : UVM-Python Verification Library
 # Module Name   : wb_master_driver
 # Description   : Wishbone Bus Interface Driver.
@@ -119,7 +119,7 @@ class wb_master_driver(UVMDriver):
             self.seq_item_port.item_done()
             phase.drop_objection(self, "wb_master_driver drop objection")
             self.trig.set()
-            await RisingEdge(self.vif.i_clk):
+            await RisingEdge(self.vif.i_clk)
 
 
     async def feed_data(self, tr):
@@ -128,7 +128,7 @@ class wb_master_driver(UVMDriver):
         while (count < tr.transmit_delay):
             # Simulate back preassure
             count = count+1
-            await RisingEdge(self.vif.i_clk):
+            await RisingEdge(self.vif.i_clk)
         
         # Stimulate the bus.
         self.vif.dat_i   <= tr.data_in
@@ -138,7 +138,7 @@ class wb_master_driver(UVMDriver):
 
 
     async def reset_signals(self):
-        while (self.vif.i_reset_sync == 1)
+        while (self.vif.i_reset_sync == 1):
             # Hold signals low while reset
             self.vif.dat_i   <= 0
             self.vif.ack_i   <= 0

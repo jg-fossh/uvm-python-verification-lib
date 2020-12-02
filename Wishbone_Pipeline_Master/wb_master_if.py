@@ -33,8 +33,8 @@
 # File name     : wb_master_if.py
 # Author        : Jose R Garcia
 # Created       : 2020/11/22 10:20:00
-# Last modified : 2020/11/30 14:50:17
-# Project Name  : UVM Python Verification Library
+# Last modified : 2020/12/01 14:46:17
+# Project Name  : UVM-Python Verification Library
 # Module Name   : wb_master_if
 # Description   : Wishbone master virtual interface
 #

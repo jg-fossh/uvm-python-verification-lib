@@ -33,7 +33,7 @@
 # File name     : wb_master_monitor.py
 # Author        : Jose R Garcia
 # Created       : 2020/11/05 20:08:35
-# Last modified : 2020/12/01 21:53:56
+# Last modified : 2020/12/02 22:48:39
 # Project Name  : UVM Python Verification Library
 # Module Name   : wb_master_monitor
 # Description   : Wishbone Master Monitor.
@@ -130,7 +130,7 @@ class wb_master_monitor(UVMMonitor):
     async def trans_observed(self):
         while (self.vif.ack_i == 0):
             # Loop checks if ack_i every clock cycle until it is asserted.
-            await RisingEdge(self.vif.i_clk)
+            await RisingEdge(self.vif.clk_i)
 
 
 uvm_component_utils(wb_master_monitor)

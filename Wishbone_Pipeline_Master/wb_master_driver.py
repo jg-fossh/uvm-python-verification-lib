@@ -33,7 +33,7 @@
 # File name     : wb_master_driver.py
 # Author        : Jose R Garcia
 # Created       : 2020/11/22 12:45:43
-# Last modified : 2020/12/01 21:51:55
+# Last modified : 2020/12/02 22:48:41
 # Project Name  : UVM-Python Verification Library
 # Module Name   : wb_master_driver
 # Description   : Wishbone Bus Interface Driver.
@@ -71,7 +71,7 @@ class wb_master_driver(UVMDriver):
         self.trig = Event("trans_exec")  # event
         self.tag  = "wb_master_" + name
         self.data = 0
-        self.cfg
+        self.cfg  = None
 
 
     def build_phase(self, phase):
@@ -100,13 +100,13 @@ class wb_master_driver(UVMDriver):
         # Initiate Read signals at their reset values.
         while True:
             
-            if (self.vif.i_reset_sync == 1):
+            if (self.vif.rst_i == 1):
                 self.reset_signals()
             
             
             while (self.vif.stb_o == 0):
                 # Wait for strobe
-                await RisingEdge(self.vif.i_clk)
+                await RisingEdge(self.vif.clk_i)
 
 
             # If out of reset get next sequence item.
@@ -119,7 +119,7 @@ class wb_master_driver(UVMDriver):
             self.seq_item_port.item_done()
             phase.drop_objection(self, "wb_master_driver drop objection")
             self.trig.set()
-            await RisingEdge(self.vif.i_clk)
+            await RisingEdge(self.vif.clk_i)
 
 
     async def feed_data(self, tr):
@@ -128,7 +128,7 @@ class wb_master_driver(UVMDriver):
         while (count < tr.transmit_delay):
             # Simulate back preassure
             count = count+1
-            await RisingEdge(self.vif.i_clk)
+            await RisingEdge(self.vif.clk_i)
         
         # Stimulate the bus.
         self.vif.dat_i   <= tr.data_in
@@ -144,7 +144,7 @@ class wb_master_driver(UVMDriver):
             self.vif.ack_i   <= 0
             self.vif.stall_i <= 0
             self.vif.tgd_i   <= 0
-            await RisingEdge(self.vif.i_clk)
+            await RisingEdge(self.vif.clk_i)
 
 
     async def trans_executed(self, tr):

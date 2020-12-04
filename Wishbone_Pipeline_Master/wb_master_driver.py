@@ -33,7 +33,7 @@
 # File name     : wb_master_driver.py
 # Author        : Jose R Garcia
 # Created       : 2020/11/22 12:45:43
-# Last modified : 2020/12/02 22:48:41
+# Last modified : 2020/12/03 20:49:50
 # Project Name  : UVM-Python Verification Library
 # Module Name   : wb_master_driver
 # Description   : Wishbone Bus Interface Driver.
@@ -43,7 +43,12 @@
 ##################################################################################################
 import cocotb
 from cocotb.triggers import *
+
 from uvm import *
+from uvm.base import *
+from uvm.comps import UVMDriver
+from uvm.macros import uvm_component_utils, uvm_info
+
 from wb_master_seq import *
 from wb_master_if import *
 
@@ -69,7 +74,7 @@ class wb_master_driver(UVMDriver):
         self.seq_item_port
         self.vif  = wb_master_if
         self.trig = Event("trans_exec")  # event
-        self.tag  = "wb_master_" + name
+        self.tag  = "wb_master_driver" + name
         self.data = 0
         self.cfg  = None
 
@@ -96,30 +101,12 @@ class wb_master_driver(UVMDriver):
            Args:
              phase: run_phase
         """
-        uvm_info("wb_master_driver", "wb_master_driver run_phase started", UVM_MEDIUM)
-        # Initiate Read signals at their reset values.
         while True:
-            
-            if (self.vif.rst_i == 1):
-                self.reset_signals()
-            
-            
-            while (self.vif.stb_o == 0):
-                # Wait for strobe
-                await RisingEdge(self.vif.clk_i)
-
-
-            # If out of reset get next sequence item.
-            tr = []
-            # Drives signals with sequences
-            await self.seq_item_port.get_next_item(tr)
-            phase.raise_objection(self, "wb_master_driver objection")
-            tr = tr[0]
-            self.feed_data(tr)
-            self.seq_item_port.item_done()
-            phase.drop_objection(self, "wb_master_driver drop objection")
-            self.trig.set()
+    
             await RisingEdge(self.vif.clk_i)
+
+            if (self.vif.stb_o == 1):
+                await self.get_and_drive(phase)
 
 
     async def feed_data(self, tr):
@@ -135,16 +122,27 @@ class wb_master_driver(UVMDriver):
         self.vif.ack_i   <= tr.acknowledge
         self.vif.stall_i <= tr.stall
         self.vif.tgd_i   <= tr.response_data_tag
+        await RisingEdge(self.vif.clk_i)
+
+
+    async def get_and_drive(self, phase):
+        tr = []
+        # Drives signals with sequences
+        await self.seq_item_port.get_next_item(tr)
+        phase.raise_objection(self, self.tag + "objection")
+        tr = tr[0]
+        await self.feed_data(tr)
+        self.seq_item_port.item_done()
+        phase.drop_objection(self, "wb_master_driver drop objection")
+
+        self.vif.ack_i <= 0
+        self.trig.set()
 
 
     async def reset_signals(self):
-        while (self.vif.i_reset_sync == 1):
-            # Hold signals low while reset
-            self.vif.dat_i   <= 0
-            self.vif.ack_i   <= 0
-            self.vif.stall_i <= 0
-            self.vif.tgd_i   <= 0
-            await RisingEdge(self.vif.clk_i)
+        # Hold signals low while reset
+        self.vif.ack_i <= 0
+        await RisingEdge(self.vif.clk_i)
 
 
     async def trans_executed(self, tr):

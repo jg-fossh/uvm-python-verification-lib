@@ -33,7 +33,7 @@
 # File name     : wb_master_seq.py
 # Author        : Jose R Garcia
 # Created       : 2020/11/22 10:24:13
-# Last modified : 2020/12/01 21:52:54
+# Last modified : 2020/12/03 14:25:47
 # Project Name  : UVM Python Verification Library
 # Module Name   : wb_master_seq, wb_master_base_sequence
 # Description   : Wishbone Bus Sequence Item and Sequences.
@@ -105,7 +105,7 @@ class read_single_sequence(wb_master_base_sequence):
         self.data              = 0
         self.transmit_delay    = 0
         self.response_data_tag = 0
-
+        self.acknowledge       = 1
 
     async def body(self):
         # Build the sequence item
@@ -133,6 +133,7 @@ class write_single_sequence(wb_master_base_sequence):
         self.data              = 0
         self.transmit_delay    = 0
         self.response_data_tag = 0
+        self.acknowledge       = 1
 
 
     async def body(self):

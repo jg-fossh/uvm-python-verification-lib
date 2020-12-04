@@ -33,7 +33,7 @@
 # File name     : wb_master_monitor.py
 # Author        : Jose R Garcia
 # Created       : 2020/11/05 20:08:35
-# Last modified : 2020/12/02 22:48:39
+# Last modified : 2020/12/03 20:40:22
 # Project Name  : UVM Python Verification Library
 # Module Name   : wb_master_monitor
 # Description   : Wishbone Master Monitor.
@@ -43,10 +43,12 @@
 ##################################################################################################
 import cocotb
 from cocotb.triggers import *
+
 from uvm.base.uvm_callback import *
 from uvm.comps.uvm_monitor import UVMMonitor
 from uvm.tlm1 import *
 from uvm.macros import *
+
 from wb_master_seq import *
 from wb_master_if import *
 
@@ -103,19 +105,23 @@ class wb_master_monitor(UVMMonitor):
             tr = None  # Clean transaction for every loop.
             # Create sequence item for this transaction.
             tr = wb_master_seq.type_id.create("tr", self)
-
-            if (self.vif.rst_i == 0 and self.vif.stb_o == 1):
+            
+            await RisingEdge(self.vif.clk_i)
+            
+            if (self.vif.stb_o == 1):
                 # Load signals values into sequence item to describe the transaction
                 tr.address     = self.vif.adr_o.value.integer
                 tr.data_out    = self.vif.dat_o.value.integer
                 tr.select      = self.vif.sel_o.value.integer
-                tr.cycle       = self.vif.cyc_o.value.integer
+                tr.cycle       = self.vif.cyc_o
                 tr.strobe      = self.vif.stb_o.value.integer
                 tr.address_tag = self.vif.tga_o.value.integer
                 tr.data_tag    = self.vif.tgd_o.value.integer
                 tr.cycle_tag   = self.vif.tgc_o.value.integer
                 
-                await self.wait_for_ack() # Wait for response
+                #await self.wait_for_ack() # Wait for response
+                await RisingEdge(self.vif.ack_i)
+
                 self.num_items += 1       # Increment transactions count
                 # Load response values into sequence item to describe the transaction
                 tr.data_in           = self.vif.dat_i.value.integer
@@ -124,10 +130,10 @@ class wb_master_monitor(UVMMonitor):
                 tr.acknowledge       = self.vif.ack_i.value.integer
 
                 self.ap.write(tr) # Send transaction through analysis port
-                uvm_info(self.tag, tr.print(), UVM_FULL)
+                uvm_info(self.tag, tr.convert2string(), UVM_FULL)
 
 
-    async def trans_observed(self):
+    async def wait_for_ack(self):
         while (self.vif.ack_i == 0):
             # Loop checks if ack_i every clock cycle until it is asserted.
             await RisingEdge(self.vif.clk_i)

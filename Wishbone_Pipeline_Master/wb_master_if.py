@@ -33,7 +33,7 @@
 # File name     : wb_master_if.py
 # Author        : Jose R Garcia
 # Created       : 2020/11/22 10:20:00
-# Last modified : 2020/12/01 14:46:17
+# Last modified : 2020/12/02 23:12:07
 # Project Name  : UVM-Python Verification Library
 # Module Name   : wb_master_if
 # Description   : Wishbone master virtual interface
@@ -65,24 +65,24 @@ class wb_master_if(sv_if):
         """
         if bus_map is None:
             #  If NONE then create the default.
-            bus_map = {"clk_i"   : "clk_i", 
-                       "rst_i"   : "rst_i",
-                       "adr_o"   : "adr_o", 
-                       "dat_i"   : "dat_i",
-                       "dat_o"   : "dat_o", 
-                       "we_o"    : "we_o",
-                       "sel_o"   : "sel_o",
-                       "stb_o"   : "stb_o",
-                       "ack_i"   : "ack_i",
-                       "cyc_o"   : "cyc_o",
-                       "stall_i" : "stall_i",
-                       "tga_o"   : "tga_o",
-                       "tgd_i"   : "tgd_i",
-                       "tgd_o"   : "tgd_o",
-                       "tgc_o"   : "tgc_o"}
+            bus_map = {"clk_i": "clk_i", 
+                       "rst_i": "rst_i",
+                       "adr_o": "adr_o", 
+                       "dat_i": "dat_i",
+                       "dat_o": "dat_o", 
+                       "we_o": "we_o",
+                       "sel_o": "sel_o",
+                       "stb_o": "stb_o",
+                       "ack_i": "ack_i",
+                       "cyc_o": "cyc_o",
+                       "stall_i": "stall_i",
+                       "tga_o": "tga_o",
+                       "tgd_i": "tgd_i",
+                       "tgd_o": "tgd_o",
+                       "tgc_o": "tgc_o"}
         super().__init__(dut, "",bus_map)
         #self.rst = dut.i_reset_sync
 
     
     async def start(self):
-        await Timer(0)
+        await Timer(0, "NS")

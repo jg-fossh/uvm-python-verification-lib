@@ -33,7 +33,7 @@
 # File name     : wb_master_seq.py
 # Author        : Jose R Garcia
 # Created       : 2020/11/22 10:24:13
-# Last modified : 2020/12/03 14:25:47
+# Last modified : 2020/12/08 22:09:16
 # Project Name  : UVM Python Verification Library
 # Module Name   : wb_master_seq, wb_master_base_sequence
 # Description   : Wishbone Bus Sequence Item and Sequences.
@@ -74,7 +74,7 @@ class wb_master_seq(UVMSequenceItem):
 
 
     def convert2string(self):
-        return sv.sformatf("\n ======================================= \n     ACK_i  : %s \n  TDG_i : 0h%0h \n     DATA_i : 0h%0h \n    Delay : %d  clocks \n ======================================= \n ",
+        return sv.sformatf("\n ======================================= \n     ACK_i  : %d \n  TDG_i : 0h%0h \n     DATA_i : 0h%0h \n    Delay : %d  clocks \n ======================================= \n ",
                 self.acknowledge, self.response_data_tag, self.data_in, self.transmit_delay)
 
 

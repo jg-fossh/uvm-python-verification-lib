@@ -33,7 +33,7 @@
 # File name     : wb_master_agent.py
 # Author        : Jose R Garcia
 # Created       : 2020/11/09 21:43:54
-# Last modified : 2020/12/01 17:05:43
+# Last modified : 2020/12/12 09:34:58
 # Project Name  : UVM-Python Verification Library
 # Module Name   : wb_master_agent
 # Description   : Wishbone Bus Master Verification Component Agent.
@@ -82,11 +82,10 @@ class wb_master_agent(UVMAgent):
            Args:
              phase: build_phase
         """
-        arr = []
-        if (not UVMConfigDb.get(self, "*", "cfg", arr)):
-            uvm_fatal("wb_master_agent", "No config")
-        self.cfg = arr[0]
-        
+        #  arr = []
+        #  if (not UVMConfigDb.get(self, "*", "cfg", arr)):
+        #      uvm_fatal("wb_master_agent", "No config")
+        #  self.cfg = arr[0]
         
         if (self.cfg.has_driver == 1):
             self.drv = wb_master_driver.type_id.create("drv", self)

@@ -33,7 +33,7 @@
 # File name     : wb_master_seq.py
 # Author        : Jose R Garcia
 # Created       : 2020/11/22 10:24:13
-# Last modified : 2020/12/08 22:09:16
+# Last modified : 2020/12/12 09:54:45
 # Project Name  : UVM Python Verification Library
 # Module Name   : wb_master_seq, wb_master_base_sequence
 # Description   : Wishbone Bus Sequence Item and Sequences.
@@ -74,7 +74,7 @@ class wb_master_seq(UVMSequenceItem):
 
 
     def convert2string(self):
-        return sv.sformatf("\n ======================================= \n     ACK_i  : %d \n  TDG_i : 0h%0h \n     DATA_i : 0h%0h \n    Delay : %d  clocks \n ======================================= \n ",
+        return sv.sformatf("\n =================================== \n    ACK_i : %d \n    TDG_i : 0x%0h \n   DATA_i : 0x%0h \n    Delay : %d  clocks \n =================================== \n ",
                 self.acknowledge, self.response_data_tag, self.data_in, self.transmit_delay)
 
 
@@ -102,7 +102,6 @@ class read_single_sequence(wb_master_base_sequence):
         wb_master_base_sequence.__init__(self, name)
         self.data              = 0
         self.stall             = 0
-        self.data              = 0
         self.transmit_delay    = 0
         self.response_data_tag = 0
         self.acknowledge       = 1
@@ -130,7 +129,6 @@ class write_single_sequence(wb_master_base_sequence):
     def __init__(self, name="write_single_sequence"):
         wb_master_base_sequence.__init__(self, name)
         self.stall             = 0
-        self.data              = 0
         self.transmit_delay    = 0
         self.response_data_tag = 0
         self.acknowledge       = 1

@@ -5,7 +5,7 @@ Document        | Metadata
 _Version_       | v0.0.1
 _Prepared by_   | Jose R Garcia
 _Created_       | 2020/11/26 23:18:53
-_Last modified_ | 2020/11/26 23:18:53
+_Last modified_ | 2020/12/22 23:18:53
 _Project_       | UVM-Python Verification Library
 
 ## Overview
@@ -61,8 +61,8 @@ The wb_mater_if...
 
 ### 4.1 Instruction WB Master Read
 
-Signals            | Initial State | Dimension | Direction | Definition
-:----------------- | :-----------: | :-------: | :-------: | :-----------------------
+Signals  | Initial State | Dimension | Direction | Definition
+:------- | :-----------: | :-------: | :-------: | :-----------------------
 `adr_o`  |      0  | `[adr_o_MSB:0]`  |    Out    | Read Address signal.
 `dat_i`  |      N/A      | `[dat_i_MSB:0]`  |    In     | Read response data.
 `dat_o`  |      0      |   1-bit   |    Out    | Write data signal.

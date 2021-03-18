@@ -1,4 +1,4 @@
-# Wishbone Pipeline Master Verification Agent Specifications
+# SPI Slave Verification Agent Specifications
 
 Document      | Metadata
 :------------ | :------------------
